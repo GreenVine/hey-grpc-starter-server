@@ -1,0 +1,4 @@
+[submodule "interface"]
+	path = interface
+	url = https://github.com/GreenVine/hey-grpc-starter-interface.git
+    branch = master
