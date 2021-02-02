@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  grpc_server:
+    build:
+      context: .
+    image: heygrpc-starter-server:local-build
+    command: [ '-address', '0.0.0.0:3000' ]
+    volumes:
+      - ${PWD}:/home/app:ro
+      - ${GOPATH}/src:/go/src
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+
+  envoy_proxy:
+    image: envoyproxy/envoy-alpine:v1.17-latest
+    depends_on:
+      - grpc_server
+    volumes:
+      - ${PWD}/config/envoy.yaml:/etc/envoy/envoy.yaml:ro
+      - ${PWD}/interface/gen/pb:/opt/pb:ro
+    ports:
+      - 8080:8080
+      - 127.0.0.1:8081:8081 # admin port access
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "-U", "Docker/HealthProbe", "http://127.0.0.1:8081/ready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
