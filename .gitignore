@@ -133,3 +133,4 @@ $RECYCLE.BIN/
 *.lnk
 
 ### Project Specific Entries ###
+build/

@@ -1,6 +1,19 @@
 GOLANGCI_LINT_IMAGE_NAME = golangci/golangci-lint:latest-alpine
 DOCKER_COMPOSE_PROJECT_NAME = heygrpc-starter-server
 
+.PHONY: build
+build:
+		mkdir -p "$(CURDIR)/build"
+		go build -o "$(CURDIR)/build/server" -ldflags="-s -w"
+
+.PHONY: test
+test:
+		go test -v ./...
+
+.PHONY: clean
+clean:
+		rm -rf "$(CURDIR)/build"
+
 .PHONY: lint
 lint:
 		docker run --rm \
@@ -20,10 +33,6 @@ fix-lint:
 .PHONY: build-docker
 build-docker:
 		docker-compose -p $(DOCKER_COMPOSE_PROJECT_NAME) build
-
-.PHONY: test
-test:
-		go test -v ./...
 
 .PHONY: start
 start:
