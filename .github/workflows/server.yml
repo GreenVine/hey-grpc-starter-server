@@ -157,19 +157,6 @@ jobs:
       - lint_dockerfile
       - test_go
     if: ${{ github.event_name != 'pull_request' }}
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - os: linux
-            platform: '386'
-            docker_platform: linux/386
-          - os: linux
-            platform: amd64
-            docker_platform: linux/amd64
-          - os: linux
-            platform: arm64
-            docker_platform: linux/arm64
     steps:
       - id: checkout_repo
         name: Checkout repository
@@ -210,10 +197,8 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          platforms: ${{ matrix.docker_platform }}
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          build-args: |
-            TARGET_OS=${{ matrix.os }}
-            TARGET_ARCH=${{ matrix.platform }}
+          build-args: ENABLE_UPX=false
           tags: ${{ steps.gen_meta_for_docker_hub.outputs.tags }}
           labels: ${{ steps.gen_meta_for_docker_hub.outputs.labels }}
