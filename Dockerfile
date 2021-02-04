@@ -27,7 +27,7 @@ COPY . .
 # Install dependencies and build binaries
 RUN apk update \
     && apk --no-cache add ca-certificates \
-    && if [ "${ENABLE_UPX}" == '1' ] || [ "${ENABLE_UPX}" == 'true' ]; then apk --no-cache add upx; fi \
+    && if [ "${ENABLE_UPX}" = '1' ] || [ "${ENABLE_UPX}" = 'true' ]; then apk --no-cache add upx; fi \
     && update-ca-certificates \
     && adduser \
            --disabled-password \
@@ -40,7 +40,7 @@ RUN apk update \
 RUN go get -d \
     && go build -o /home/build/server -ldflags="-s -w" \
     && go test -v ./... \
-    && if [ "${ENABLE_UPX}" == '1' ] || [ "${ENABLE_UPX}" == 'true' ]; then upx --lzma -q /home/build/server; fi
+    && if [ "${ENABLE_UPX}" = '1' ] || [ "${ENABLE_UPX}" = 'true' ]; then upx --lzma -q /home/build/server; fi
 
 ### Runner ###
 FROM ${RUNNER_BASE_IMAGE}:${RUNNER_BASE_TAG} AS runner
