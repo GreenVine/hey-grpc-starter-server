@@ -1,5 +1,5 @@
 GOLANGCI_LINT_IMAGE_NAME = golangci/golangci-lint:latest-alpine
-DOCKER_COMPOSE_PROJECT_NAME = heygrpc-starter-server
+DOCKER_COMPOSE_PROJECT_NAME = hey-grpc-server
 
 .PHONY: build
 build:
