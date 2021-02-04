@@ -4,6 +4,7 @@ ARG RUNNER_BASE_IMAGE=alpine
 ARG RUNNER_BASE_TAG=latest
 ARG TARGET_OS=linux
 ARG TARGET_ARCH=amd64
+ARG ENABLE_UPX=0
 
 ### Builder ###
 FROM ${BUILDER_BASE_IMAGE}:${BUILDER_BASE_TAG} AS builder
@@ -12,6 +13,7 @@ ARG RUNNER_BASE_IMAGE
 ARG RUNNER_BASE_TAG
 ARG TARGET_OS
 ARG TARGET_ARCH
+ARG ENABLE_UPX
 
 ENV CGO_ENABLED=0
 ENV GOOS=${TARGET_OS}
@@ -24,7 +26,8 @@ COPY . .
 
 # Install dependencies and build binaries
 RUN apk update \
-    && apk --no-cache add ca-certificates upx \
+    && apk --no-cache add ca-certificates \
+    && if [ "${ENABLE_UPX}" == '1' ] || [ "${ENABLE_UPX}" == 'true' ]; then apk --no-cache add upx; fi \
     && update-ca-certificates \
     && adduser \
            --disabled-password \
@@ -37,8 +40,7 @@ RUN apk update \
 RUN go get -d \
     && go build -o /home/build/server -ldflags="-s -w" \
     && go test -v ./... \
-    && upx --lzma -q /home/build/server
-
+    && if [ "${ENABLE_UPX}" == '1' ] || [ "${ENABLE_UPX}" == 'true' ]; then upx --lzma -q /home/build/server; fi
 
 ### Runner ###
 FROM ${RUNNER_BASE_IMAGE}:${RUNNER_BASE_TAG} AS runner
