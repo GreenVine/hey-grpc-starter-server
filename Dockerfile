@@ -28,6 +28,7 @@ COPY . .
 RUN apk update \
     && apk --no-cache add ca-certificates \
     && if [ "${ENABLE_UPX}" = '1' ] || [ "${ENABLE_UPX}" = 'true' ]; then apk --no-cache add upx; fi \
+    && rm -rf /var/cache/apk/* \
     && update-ca-certificates \
     && adduser \
            --disabled-password \
