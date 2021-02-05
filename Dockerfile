@@ -40,7 +40,7 @@ RUN apk update \
 
 RUN go get -d \
     && go build -o /home/build/server -ldflags="-s -w" \
-    && go test -v ./... \
+    && if [ "${ENABLE_TESTS}" = '1' ] || [ "${ENABLE_TESTS}" = 'true' ]; then go test -v ./... ; fi \
     && if [ "${ENABLE_UPX}" = '1' ] || [ "${ENABLE_UPX}" = 'true' ]; then upx --lzma -q /home/build/server; fi
 
 ### Runner ###
