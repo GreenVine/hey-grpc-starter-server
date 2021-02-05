@@ -4,7 +4,7 @@ services:
   grpc_server:
     build:
       context: .
-    image: heygrpc-starter-server:local-build
+    image: hey-grpc-server:local-build
     command: [ '-address', '0.0.0.0:3000' ]
     volumes:
       - ${PWD}:/home/app:ro
