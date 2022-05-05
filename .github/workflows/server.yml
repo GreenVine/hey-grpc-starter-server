@@ -193,7 +193,7 @@ jobs:
 
       - id: build_push_to_docker_hub
         name: Build & push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: Dockerfile
